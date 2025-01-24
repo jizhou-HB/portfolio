@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R Script Display</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css">
+</head>
+<body>
+    <h2>R codes for panel data: growth of variables, relationship between two variables cross time</h2>
+    <pre><code class="language-r">
+### Sample R code: latent growth model, cross-lagged panel model, resi
+##latent growth model
+# Load necessary library
+library(lavaan)
+
+# Load your data
+data <- read.table("w12345.dat", header = TRUE, na.strings = ".")
+
+# Specify the Latent Growth Model
+lgm_model <- '
+  # Define the intercept and slope for latent growth
+  i =~ 1*w1_coop + 1*w2_coop + 1*w3_coop + 1*w4_coop + 1*w5_coop
+  s =~ 0*w1_coop + 1*w2_coop + 2*w3_coop + 3*w4_coop + 4*w5_coop
+'
+
+# Fit the model using lavaan
+fit <- growth(lgm_model, data = data, missing = "ML")
+
+# Summarize the results
+summary(fit, fit.measures = TRUE, standardized = TRUE)
+
+
+## longititudinal relationship: cross-lagged panel model
+# Load necessary library
+library(lavaan)
+
+# Load your data
+data <- read.table("datanc.dat", header = TRUE, na.strings = ".")
+
+# Specify the model
+model <- '
+  # Autoregressive paths for each observed variable
+  w2goal ~ w1goal
+  w2Note1 ~ w1Note1
+  w2cm ~ w1cm
+  
+  w3goal ~ w2goal
+  w3Note1 ~ w2Note1
+  w3cm ~ w2cm
+  
+  w4goal ~ w3goal
+  w4Note1 ~ w3Note1
+  w4cm ~ w3cm
+  
+  w5goal ~ w4goal
+  w5Note1 ~ w4Note1
+  w5cm ~ w4cm
+  
+  # Covariances at the first time point
+  w1goal ~~ w1Note1 + w1cm
+  w1Note1 ~~ w1cm
+  
+  # Covariances for residuals of observed variables across time points
+  w2goal ~~ w2Note1 + w2cm
+  w2Note1 ~~ w2cm
+  
+  w3goal ~~ w3Note1 + w3cm
+  w3Note1 ~~ w3cm
+  
+  w4goal ~~ w4Note1 + w4cm
+  w4Note1 ~~ w4cm
+  
+  w5goal ~~ w5Note1 + w5cm
+  w5Note1 ~~ w5cm
+  
+  # Covariates influencing observed variables at all time points
+  w1goal + w1Note1 + w1cm ~ w1sex + w1track1
+  w2goal + w2Note1 + w2cm ~ w1sex + w1track1
+  w3goal + w3Note1 + w3cm ~ w1sex + w1track1
+  w4goal + w4Note1 + w4cm ~ w1sex + w1track1
+  w5goal + w5Note1 + w5cm ~ w1sex + w1track1
+'
+
+# Fit the model with the lavaan package
+fit <- sem(model, data = data, cluster = "sch1", estimator = "MLR", missing = "ML", fixed.x = FALSE)
+
+# Summary of the results
+summary(fit, fit.measures = TRUE, standardized = TRUE, rsquare = TRUE)
+
+# Output modification indices
+modindices(fit)
+
+# Confidence intervals
+parameterEstimates(fit, ci = TRUE, standardized = TRUE)
+
+## logitudinal model: Random Intercept Cross-Lagged Panel Model 
+# Load necessary library
+library(lavaan)
+
+# Load the data
+data <- read.table("datanc.dat", header = TRUE, na.strings = ".")
+
+# Specify the Random Intercept Cross-Lagged Panel Model (RI-CLPM)
+model <- '
+  # Random intercepts for Note1 and Intrinsic Motivation
+  RIx =~ 1*w1Note1 + 1*w2Note1 + 1*w3Note1 + 1*w4Note1 + 1*w5Note1
+  RIy =~ 1*w1intr + 1*w2intr + 1*w3intr + 1*w4intr + 1*w5intr
+
+  # Covariance between random intercepts
+  RIx ~~ RIy
+
+  # Within-person centered latent variables
+  wx1 =~ 1*w1Note1
+  wx2 =~ 1*w2Note1
+  wx3 =~ 1*w3Note1
+  wx4 =~ 1*w4Note1
+  wx5 =~ 1*w5Note1
+
+  wy1 =~ 1*w1intr
+  wy2 =~ 1*w2intr
+  wy3 =~ 1*w3intr
+  wy4 =~ 1*w4intr
+  wy5 =~ 1*w5intr
+
+  # Set measurement error variances to zero for within-person components
+  w1Note1 ~~ 0*w1Note1
+  w2Note1 ~~ 0*w2Note1
+  w3Note1 ~~ 0*w3Note1
+  w4Note1 ~~ 0*w4Note1
+  w5Note1 ~~ 0*w5Note1
+
+  w1intr ~~ 0*w1intr
+  w2intr ~~ 0*w2intr
+  w3intr ~~ 0*w3intr
+  w4intr ~~ 0*w4intr
+  w5intr ~~ 0*w5intr
+
+  # Regression of random intercepts on covariates
+  RIx ~ w1sex + w1track1
+  RIy ~ w1sex + w1track1
+
+  # Autoregressive paths for within-person centered variables
+  wx2 ~ wx1 + wy1
+  wy2 ~ wx1 + wy1
+
+  wx3 ~ wx2 + wy2
+  wy3 ~ wx2 + wy2
+
+  wx4 ~ wx3 + wy3
+  wy4 ~ wx3 + wy3
+
+  wx5 ~ wx4 + wy4
+  wy5 ~ wx4 + wy4
+
+  # Covariances between within-person centered variables at the first time point
+  wx1 ~~ wy1
+
+  # Covariances between the residuals (innovations) of within-person components
+  wx2 ~~ wy2
+  wx3 ~~ wy3
+  wx4 ~~ wy4
+  wx5 ~~ wy5
+'
+
+# Fit the model
+fit <- sem(model, data = data, cluster = "sch1", estimator = "MLR", missing = "ML", fixed.x = FALSE)
+
+# Summarize the results
+summary(fit, fit.measures = TRUE, standardized = TRUE, rsquare = TRUE)
+
+# Output additional information, such as confidence intervals and modification indices
+parameterEstimates(fit, ci = TRUE, standardized = TRUE)
+modindices(fit)
+
+
+    </code></pre>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+</body>
+</html>

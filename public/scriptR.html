@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R Script Display</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css">
+</head>
+<body>
+    <h2>R Script: data cleaning and visualization</h2>
+    <pre><code class="language-r">
+## R code evaluation of M9 scales
+# Load necessary libraries
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(ggthemes)
+library(data.table)
+library(gridExtra)
+
+# Set working directory
+setwd("C:/Users/zhou/Desktop/Country_Reviews/Data/STQ_SCQ")
+
+# List files in the directory
+revfilelist <- list.files("C:/Users/zhou/Desktop/Country_Reviews/Data/STQ_SCQ")
+
+# Read data, skipping the first row and removing it from each data frame
+Mlist1 <- lapply(revfilelist, function(file) {
+  df <- read_excel(file, sheet = "STQ", col_names = TRUE, skip = 1)
+  df <- df[-1, ]
+  return(df)
+})
+names(Mlist1) <- revfilelist
+
+# Combine all data frames into one, add "CNT" as identifier, and drop rows with NA in columns 2 and 3
+Mlist1_across <- rbindlist(Mlist1, fill = TRUE, idcol = "CNT")
+Mlist1_across <- Mlist1_across[complete.cases(Mlist1_across[, 2:3]), ]
+
+# Filter data to include only specific IDs
+Mlist <- c('ST016', 'ST036', 'ST111', 'ST114', 'ST181', 'ST182', 'ST183', 'ST184', 'ST185', 'ST186', 'ST188', 'ST208')
+Mlist1_across <- Mlist1_across %>% filter(ID %in% Mlist)
+
+# Save comments and drop unnecessary columns
+setwd("C:/Users/zhou/Desktop/Country_Reviews/Delivered_Country_Reviews/Results")
+comments_M9 <- Mlist1_across %>% select(CNT, ID, Comments)
+write.csv(comments_M9, "comments_M9.csv")
+
+Mlist1_across <- Mlist1_across %>% select(-Comments, -X__1, -X__2)
+
+# Convert columns to factors and revalue them for easier interpretation
+factor_columns <- c("Relevance for PISA 2018 Main Survey", 
+                    "Cultural acceptance and feasibility", 
+                    "Field Trial results and data issue")
+Mlist1_across[factor_columns] <- lapply(Mlist1_across[factor_columns], factor)
+
+# Define factor levels
+library(plyr)
+Mlist1_across$`Relevance for PISA 2018 Main Survey` <- revalue(
+  Mlist1_across$`Relevance for PISA 2018 Main Survey`,
+  c("0" = "0 - not relevant", "1" = "1 - relevant", "2" = "2 - very relevant", "99" = "no comment")
+)
+Mlist1_across$`Cultural acceptance and feasibility` <- revalue(
+  Mlist1_across$`Cultural acceptance and feasibility`,
+  c("0" = "0 - not acceptable", "1" = "1 - acceptable", "99" = "no comment")
+)
+Mlist1_across$`Field Trial results and data issue` <- revalue(
+  Mlist1_across$`Field Trial results and data issue`,
+  c("0" = "0 - not acceptable", "1" = "1 - acceptable", "99" = "no comment")
+)
+
+# Transform data to long format for easier plotting
+Mlist1_across <- Mlist1_across %>% 
+  gather(Rating_Type, Value, factor_columns) %>% 
+  group_by(ID, Rating_Type, Value) %>% 
+  summarize(N = n(), .groups = 'drop')
+
+# Plot function
+plot_ratings <- function(data, title, fill_values) {
+  ggplot(data, aes(ID, y = N, fill = Value)) +
+    geom_bar(stat = "identity", alpha = 0.8) +
+    scale_fill_manual("legend", values = fill_values) +
+    ggtitle(paste("Ratings on", title, "by Construct ID")) +
+    xlab("Rating") + theme_fivethirtyeight(base_size = 12) +
+    theme(legend.position = "right", legend.text = element_text(size = rel(0.65)),
+          legend.direction = "vertical", axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, size = 7))
+}
+
+# Define colors for each rating type
+colors_relevance <- c("0 - not relevant" = "red", "1 - relevant" = "lightgreen", "2 - very relevant" = "lightblue", "no comment" = "orange")
+colors_cultural <- c("0 - not acceptable" = "red", "1 - acceptable" = "lightblue", "no comment" = "orange")
+colors_field_trial <- c("0 - not acceptable" = "red", "1 - acceptable" = "lightblue", "no comment" = "orange")
+
+# Generate and save plots
+rate <- plot_ratings(filter(Mlist1_across, Rating_Type == "Relevance for PISA 2018 Main Survey"), "Relevance for PISA 2018 Main Survey", colors_relevance)
+rate2 <- plot_ratings(filter(Mlist1_across, Rating_Type == "Cultural acceptance and feasibility"), "Cultural acceptance and feasibility", colors_cultural)
+rate3 <- plot_ratings(filter(Mlist1_across, Rating_Type == "Field Trial results and data issue"), "Field Trial results and data issue", colors_field_trial)
+
+# Arrange and save all plots in one PDF
+rateAll <- grid.arrange(rate, rate2, rate3)
+ggsave("M9.pdf", plot = rateAll, device = "pdf", width = 12, height = 9, dpi = 2000)
+
+    </code></pre>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ji's Portfolio</title>
+    <link rel="stylesheet" href="style2.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>Ji Zhou</h1>
+            <button id="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <!-- <li><a href="#projects">Projects</a></li> -->
+                    <li><a href="./public/about.html">About Me</a></li>
+                    <li><a href="./public/contact.html">Contact Me</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="home">
+            <h2 id="typing-text">Hi there! I am Ji, a</h2>
+            
+        </section>
+        
+        <section id="projects">
+            <h2>Projects</h2>
+            <div class="project-grid">
+                <div class="project-card">
+                    <h3><a href="./public/UX-Research-Project-HW.html">UX Research: Huawei Car</a></h3>
+                    <a href="./public/UX-Research-Project-HW.html"><img src="./assets/images/IMG_0983.png" alt="Trust or not trust, this is the question"></a>
+                </div>
+                <div class="project-card">
+                    <h3><a href="./public/DM.html">UX Research: Deutsches Museum</a></h3>
+                    <a href="./public/DM.html"><img src="./assets/images/DM.png" alt="dm pro"></a>
+                </div>
+                <div class="project-card">
+                    <h3><a href="./public/UXUI-BMW.html">UX/UI design: BMW Navigation</a></h3>
+                    <a href="./public/UXUI-BMW.html"><img src="./assets/images/NaviPro.jpg" alt="UX UI design for BMW"></a>
+                </div>
+                <div class="project-card">
+                    <h3><a href="./public/lsa-R.html">Data Analysis: OECD PISA</a></h3>
+                    <a href="./public/lsa-R.html"><img src="./assets/images/Oecd-Pisa.jpg" alt="Data Analysis for OECD and NEPS"></a>
+                </div>
+                <div class="project-card">
+                    <h3><a href="./public/lsa-R2.html">Data Analysis: NEPS</a></h3>
+                    <a href="./public/lsa-R2.html"><img src="./assets/images/NEPS.png" alt="Data Analysis for OECD and NEPS"></a>
+                </div>
+                <div class="project-card">
+                    <h3><a href="./public/WebPro.html">Web-Dev Projects</a></h3>
+                    <a href="./public/WebPro.html"><img src="./assets/images/mapmeta.png" alt="Data Analysis for OECD and NEPS"></a>
+                </div>
+            </div>
+        </section>
+        
+        <section id="gallery3">
+            <h2>Skills</h2>
+            <div class="gallery-grid">
+                <img src="./assets/images/skills.png" alt="Skills">
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2>Contact Me</h2>
+            <p>Feel free to reach out to me via email at <a href="mailto:ji.zhou@outlook.de">ji.zhou@outlook.de</a>.</p>
+            <p>Or check my CV: <a href="./assets/images/cv_JiZhou.pdf">My CV</a></p>
+        </section>
+    </main>
+
+    <button id="scroll-to-top" title="Back to top">↑</button>
+
+
+    <footer>
+        <p>&copy; 2024 Ji Zhou. All rights reserved.</p>
+    </footer>
+
+ 
+    <script>
+        // Example JavaScript code for the burger button
+        const navToggle = document.getElementById('nav-toggle');
+        const navMenu = document.querySelector('nav ul');
+
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+// for rolling title
+        const phrases = ["UX Researcher", "Designer", "Data Analyst"];
+        let phraseIndex = 0;
+        let letterIndex = 0;
+        const typingText = document.getElementById('typing-text');
+
+    function type() {
+        if (letterIndex < phrases[phraseIndex].length) {
+        typingText.textContent += phrases[phraseIndex].charAt(letterIndex);
+        letterIndex++;
+        setTimeout(type, 100);
+        } else {
+        setTimeout(() => {
+            letterIndex = 0;
+            phraseIndex = (phraseIndex + 1) % phrases.length;
+            typingText.textContent = "Hi there! I am Ji, a ";
+            type();
+        }, 2000);
+        }
+        }
+
+type();
+
+//for the image 
+const images = document.querySelectorAll('.project-card img');
+const lightbox = document.createElement('div');
+lightbox.className = 'lightbox';
+document.body.appendChild(lightbox);
+
+images.forEach(image => {
+    image.addEventListener('click', () => {
+        lightbox.style.display = 'flex';
+        const img = document.createElement('img');
+        img.src = image.src;
+        while (lightbox.firstChild) {
+            lightbox.removeChild(lightbox.firstChild);
+        }
+        lightbox.appendChild(img);
+    });
+});
+
+lightbox.addEventListener('click', () => {
+    lightbox.style.display = 'none';
+});
+// for scroll to top
+
+const scrollToTopBtn = document.getElementById('scroll-to-top');
+
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 100) {
+        scrollToTopBtn.style.display = 'block';
+    } else {
+        scrollToTopBtn.style.display = 'none';
+    }
+});
+
+scrollToTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+
+    </script>
+
+</body>
+
+</html>

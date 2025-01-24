@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web projects</title>
+    <link rel="stylesheet" href="../stylenew.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <a href="../index.html" class="home-link"><h1>Ji Zhou</h1></a>
+            <span class="icon" onclick="toggleNav()">☰</span> <!-- Menu icon for mobile -->
+            <nav class="navbar-links">
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="#detail1">Job on map</a></li>
+                    <li><a href="#detail2">DiceMal</a></li>
+                    
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    
+    <div class="container">
+        <section id="detail1" class="project-details">
+            <h2 class="section-title">Job on map</h2>
+            <div class="detail-grid">
+                <div class="detail-tile">
+                    <h3>Objectives</h3>
+                    <p> Goal of this project was to visualize all the jobs posted on the leibniz website (<a href="https://leibniz-psychology.org/jobboerse" target="_blank">Go to job post site</a></p>) on my map, so that I as user can find the jobs near my home.  
+                    </p>
+                </div>
+                <div class="detail-tile">
+                    <h3>Approaches</h3>
+                    <p> With the help of AI coding assistant, this project has been completed within few days. 
+                        Python was the main language used for this project. Codes can be seen on my github profile: 
+                    </p><br>
+                    <a href="https://github.com/jizhou-HB/LeibnizJobsMapping/tree/main" target="_blank">
+                        <img src="../assets/images/github.png" alt="gitweb" style="width: 30px; height: 30px;"></a>
+                </div>
+                <div class="detail-tile">
+                    <h3>Deliverables</h3>
+                    <p>Here you can try using this feature. It will be updated on a weekly basis. Click the icon and know more: </p>
+                    <a href="https://leibnizjobsmapping-kbwboxdd3rj78vpcoyakjg.streamlit.app/" target="_blank">
+                        <img src="../assets/images/iconmap.png" alt="gitweb" style="width: 30px; height: 30px;"></a>
+                </div>
+            </div>
+        </section>        
+
+        <section id="gallery">
+            <h2>Screenshots</h2>
+            <div class="gallery-grid">
+                <img src="../assets/images/mapp1.png" alt="Research Image 1">
+                <img src="../assets/images/mapp2.png" alt="Research Image 1">
+            </div>
+        </section>
+
+        <section id="detail2" class="project-details">
+            <h2 class="section-title">DiceMal</h2>
+            <div class="detail-grid">
+                <div class="detail-tile">
+                    <h3>Objectives</h3>
+                    <p> I am learning web development courses. This is a task I got from Angela's course on Udemy. I adapted it into a game which my 6-year old son can 
+                        have fun (yes, he enjoys doing multiplication).
+                    </p>
+                </div>
+                <div class="detail-tile">
+                    <h3>Tools</h3>
+                    <p>Practice of JavaScript, also some others like html and css. Codes were shared on github. 
+                        So basically it can take your voice answer and tell you right or wrong. If you got 5 or more right, 
+                        you can see the pokemon monsters. Click the icon and see the codes: </p> <br><a href="https://github.com/jizhou-HB/projectE" target="_blank">
+                            <img src="../assets/images/github.png" alt="gitweb" style="width: 30px; height: 30px;"></a>
+                </div>
+                <div class="detail-tile">
+                    <h3>Deliverables</h3>
+                    <p>This is a place you can do multiplication using your voice. 
+                        You should allow microphone access to your voice and speak German. Click the icon and know more: </p>
+                        <br> <a href="https://jizhou-hb.github.io/projectE/" target="_blank"> <img src="../assets/images/dice5.png" alt="gitweb" style="width: 30px; height: 30px;"> </a> 
+                </div>
+            </div>
+        </section>        
+
+    </div>
+
+    <section id="gallery">
+        <h2>Screenshots</h2>
+        <div class="gallery-grid">
+            <img src="../assets/images/dice1.png" alt="Research Image 1">
+            <img src="../assets/images/dice2.png" alt="Research Image 1">
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Ji Zhou. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Smooth scrolling for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetElement = document.querySelector(this.getAttribute('href'));
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - document.querySelector('header').offsetHeight,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        function toggleNav() {
+            const navbarLinks = document.querySelector('.navbar-links');
+            navbarLinks.classList.toggle('responsive');
+        }
+    
+    </script>
+</body>
+
+</html>

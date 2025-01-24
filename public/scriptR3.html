@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R Script Display</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css">
+</head>
+<body>
+    <h2>R codes for comparing two scoring methods</h2>
+    <pre><code class="language-r">
+## Sample R code: multiple group confirmatory factor analysis, correlation with plausible variables, etc.
+# Load required packages
+library(dplyr)
+library(tidyr)
+library(TAM)
+library(psychometric)
+library(psych)
+library(readxl)
+library(lavaan)
+library(semTools)
+library(ggplot2)
+library(Hmisc)
+library(Amelia)
+library(GeneNet)
+library(plyr)
+
+# Part 1: MGCFA for Joy Read and CStrat
+prepare_data <- function(filepath, na_values = c(7, 8, 9)) {
+  data <- read.csv2(filepath) %>% 
+    tbl_df() %>%
+    rename(CNT = 1) %>%
+    filter(OECD == 1) %>%
+    mutate(across(everything(), ~ replace(., . %in% na_values, NA))) %>%
+    drop_na()
+  return(data)
+}
+
+# CFA model function
+run_cfa <- function(model, data, group_var, file_prefix) {
+  sink(paste0(file_prefix, "_conf.txt"))
+  fit <- cfa(model, data = data, group = group_var, estimator = "MLM")
+  print(summary(fit, fit.measures = TRUE))
+  print(modindices(fit))
+  sink()
+  
+  sink(paste0(file_prefix, "_metric.txt"))
+  fit_metric <- cfa(model, data = data, group = group_var, estimator = "MLM", group.equal = "loadings")
+  print(summary(fit_metric, fit.measures = TRUE))
+  print(anova(fit, fit_metric))
+  print(modindices(fit_metric))
+  sink()
+  
+  sink(paste0(file_prefix, "_scalar.txt"))
+  fit_scalar <- cfa(model, data = data, group = group_var, estimator = "MLM", group.equal = c("loadings", "intercepts"))
+  print(summary(fit_scalar, fit.measures = TRUE))
+  print(anova(fit_metric, fit_scalar))
+  print(modindices(fit_scalar))
+  sink()
+}
+
+# Apply to joyread and cstrat
+data_joyread <- prepare_data("joyread.csv")
+model_joyread <- 'joyread =~ ST24Q02 + ST24Q03 + ST24Q05 + ST24Q07 + ST24Q10 + ST24Q11 + ST24Q01R + ST24Q04R + ST24Q06R + ST24Q08R + ST24Q09R'
+run_cfa(model_joyread, data_joyread, "CNT", "joyread")
+
+data_cstrat <- prepare_data("CSTRAT.csv")
+model_cstrat <- 'cstr =~ ST27Q02 + ST27Q06 + ST27Q09 + ST27Q11 + ST27Q13'
+run_cfa(model_cstrat, data_cstrat, "CNT", "cstrat")
+
+# Part 2: Correlations for Validity Analysis
+correlation_analysis <- function(data, vars, groups, na_values = c(9997, 9998, 9999)) {
+  data <- data %>%
+    mutate(across(all_of(vars), ~ replace(., . %in% na_values, NA))) %>%
+    drop_na()
+  correlations <- ddply(data, groups, function(df) {
+    cor_vals <- sapply(vars[-1], function(var) cor(df[[vars[1]]], df[[var]], method = "pearson", use = "complete.obs"))
+    return(data.frame(t(cor_vals)))
+  })
+  return(correlations)
+}
+
+data_validity <- prepare_data("validity_2009_data.csv")
+cor_joyread <- correlation_analysis(data_validity, c("JOYREAD", "UNDREM", "Zmst41", "Zmst42", "METASUM"), "COUNTRY")
+write.csv(cor_joyread, "cor_joyread.csv")
+
+# Part 3: Correlations with Plausible Values
+plausible_value_correlations <- function(data, pv_vars, ref_vars) {
+  results <- list()
+  for (pv in pv_vars) {
+    cor_data <- correlation_analysis(data, c(ref_vars, pv), "COUNTRY")
+    results[[pv]] <- cor_data
+  }
+  combined <- Reduce(function(x, y) inner_join(x, y, by = "COUNTRY"), results)
+  combined$avg_cor <- rowMeans(combined[ , -1], na.rm = TRUE)
+  return(combined)
+}
+
+pv_data <- prepare_data("M2.csv")
+pv_results <- plausible_value_correlations(pv_data, c("PV1READ", "PV2READ", "PV3READ", "PV4READ", "PV5READ"), c("Zmst41", "METASUM"))
+write.csv(pv_results, "plausible_values_cor.csv")
+
+# Part 4: Correlation Comparisons
+compare_correlations <- function(filepath) {
+  data <- read.csv(filepath)
+  comparisons <- data.frame(
+    t1 = paired.r(data$M1, data$M2, data$cor11M1M2, data$n)$t,
+    p1 = paired.r(data$M1, data$M2, data$cor11M1M2, data$n)$p,
+    t2 = paired.r(data$M11, data$M22, data$cor22M11M22, data$n)$t,
+    p2 = paired.r(data$M11, data$M22, data$cor22M11M22, data$n)$p
+  )
+  return(comparisons)
+}
+
+comparison_results <- compare_correlations("task2.csv")
+write.csv(comparison_results, "comparison_results.csv")
+
+
+    </code></pre>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+</body>
+</html>

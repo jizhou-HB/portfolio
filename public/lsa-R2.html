@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEPS project</title>
+    <link rel="stylesheet" href="../stylenew.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <a href="../index.html" class="home-link"><h1>Ji Zhou</h1></a>
+            <span class="icon" onclick="toggleNav()">☰</span> <!-- Menu icon for mobile -->
+            <nav class="navbar-links">
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="#overview">Overview</a></li>
+                    <li><a href="#detail1">Skill 1</a></li>
+                    <li><a href="#detail2">Skill 2</a></li>
+                    <li><a href="#detail3">Skill 3</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <section id="overview">
+            <div class="ufo-sec--bg">
+                <h2>Project Overview</h2>
+                <p>I lead questionnaire development, data collection for Starting Cohort 8, and coordinate collaboration projects for the National Educational Panel Study (NEPS), Germany's largest long-term educational study tracking over 70,000 participants' competencies and educational trajectories from early childhood to old age.<br></p>
+                    <p>What is NEPS: 
+                        <a href="https://www.neps-data.de/" target="_blank">
+                          <img src="../assets/images/NEPS1.png" alt="OECD PISA project" style="width: 50px; height: 30px;"></a>&nbsp;&nbsp;
+                    <br> Who is LIfBI: <a href="https://www.lifbi.de/de-de/" target="_blank"><img src="../assets/images/lifbi.png" alt="OECD PISA project" style="width: 50px; height: 30px;"></a></p>
+                <div class="overview-grid">
+                    <div class="overview-tile">
+                        <h3>Questionnaire Development</h3>
+                        <p>I was a postdoc research associate for NEPS, optimizing questionnaires (e.g., teacher/principal, student scales), managing quality control, and coordinating collaborations with internal (IFS, TU Dortmund) and external partners (IQB, Infas, IEA) alongside project management. </p>
+                    </div>
+                    <div class="overview-tile">
+                        <h3>Data Analysis</h3>
+                        <p>NEPS data, though open-access, is vast and complex. My familiarity with its structure allowed me to efficiently develop tools using R and Mplus, leading to six publications in collaboration with others within a year after leaving LIfBi. </p>
+                        
+                    </div>
+                    <div class="overview-tile">
+                        <h3>Online Survey UX optimization</h3>
+                        <p>I also optimized the online survey UI, coordinating discussions on responsive design, answer arrangement, and user navigation for different groups (e.g., students, principals).  </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="detail1" class="project-details">
+            <h2 class="section-title">Questionnaire Development</h2>
+            <div class="detail-grid">
+                <div class="detail-tile">
+                    <h3>Objectives</h3>
+                    <p> For Starting Cohort 8, we aimed to explore new concepts by adapting existing scales. This required collaboration with Infas to modify the interview schema for follow-up studies to meet new needs.</p>
+                </div>
+                <div class="detail-tile">
+                    <h3>Approaches</h3>
+                    <p> For a large-scale project like NEPS, understanding stakeholder needs is key. While new scales are rarely developed, evaluating and adapting existing ones is crucial. Cost estimation and concept prioritization support decision-making. In the telephone interviews with dropouts, challenges included data privacy (especially with minors) and designing branching logic. Collaborating with Infas and the data privacy team, I successfully addressed these issues.
+                    </p>
+                </div>
+                <div class="detail-tile">
+                    <h3>Deliverables</h3>
+                    <p>New concepts were successfully integrated into the study with high quality, and the interview study was effectively implemented. </p>
+                </div>
+            </div>
+        </section>        
+
+        <section id="detail2" class="project-details">
+            <h2 class="section-title">Data analysis</h2>
+            <div class="detail-grid">
+                <div class="detail-tile">
+                    <h3>Objectives</h3>
+                    <p>As a postdoc, publishing was essential—but beyond papers, the goal was to uncover insights hidden in vast longitudinal, multilevel data. This involved understanding, cleaning, and repairing data (e.g., handling missing class IDs), uncovering relationships, selecting suitable methods, and presenting findings to others.
+                    </p>
+                </div>
+                <div class="detail-tile">
+                    <h3>Tools and scripts</h3>
+                    <p>A variety of statistical methods/models were applied, including cross-lagged panel models, random intercept CLPM, change-on-change models, latent growth curve models, and latent profile analysis. Here are some examples.</p>
+                    <br>
+                    <ul>
+                        <li>How to clean and merge datasets into a dataset for longitudinal analysis <br>
+                        R scripts: <a href="./scriptR6.html" target="_blank">Go to scripts</a></li>
+                        <li>How to use different models for the panel data 
+                        <br>R scripts: <a href="./scriptR5.html" target="_blank">Go to scripts</a></li>
+                        <li>How to cluster the data and understand the relationship among variables 
+                        <br>R scripts: <a href="./scriptR4.html" target="_blank">Go to scripts</a></li>
+                        </ul>
+                        <br><p>The same codes and methods—such as cluster or factor analysis, multilevel regression, predictive modeling, and mixed-effects modeling—apply to topics like product demand forecasting, brand perception, customer satisfaction and loyalty analysis, sentiment tracking, segmentation, and attitudinal or behavioral analysis. </p>
+                </div>
+                <div class="detail-tile">
+                    <h3>Deliverables/Publications</h3>
+                    <ul>
+                        <li>Some publications based on the multi-level large-scale data analysis:<a href="https://largescaleassessmentsineducation.springeropen.com/articles/10.1186/s40536-023-00167-7" target="_blank"> how motivation of individuals and their perception of environment influenced their achievement </a> <br>
+                        <li>Another: <a href="https://link.springer.com/article/10.1007/s10984-023-09471-z" target="_blank"> how to identify the segment of participants based on their perception to environment and what factors can be relevant </a> 
+                    </ul>
+                </div>
+            </div>
+        </section>        
+
+        <section id="detail3" class="project-details">
+            <h2 class="section-title">On-line Survey UX optimization</h2>
+            <div class="detail-grid">
+                <div class="detail-tile">
+                    <h3>Background/Objective</h3>
+                    <p>NEPS recruits voluntary participants, so arranging concepts in an engaging way and designing an inviting online survey UI are crucial, especially with many stakeholders and a wide range of concepts. 
+                    </p>
+                </div>
+                <div class="detail-tile">
+                    <h3>Approaches</h3>
+                    <p>Key UX decisions included the arrangement of options (horizontal vs. vertical), adapting layouts based on option type, number, and device, setting time-outs, and using a navigation bar with an exit option. With limited budget, quick decisions were made based primarily on secondary research and literature from similar contexts and target groups. </p>
+                </div>
+                <div class="detail-tile">
+                    <h3>Deliverables</h3>
+                    <p>By summarizing literature and analyzing small sample test data, we made informed decisions to optimize the UX/UI of the surveys.</p>
+                </div>
+            </div>
+        </section>        
+
+        <section id="gallery">
+            <h2>Skills cloud</h2>
+            <div class="gallery-grid">
+                <img src="../assets/images/wordc2.png" alt="Research Image 1">
+            </div>
+        </section>
+    </div>
+
+    <button id="scroll-to-top" title="Back to top">↑</button>
+
+    <footer>
+        <p>&copy; 2024 Ji Zhou. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Smooth scrolling for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetElement = document.querySelector(this.getAttribute('href'));
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - document.querySelector('header').offsetHeight,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        function toggleNav() {
+            const navbarLinks = document.querySelector('.navbar-links');
+            navbarLinks.classList.toggle('responsive');
+        }
+    // for scroll to top
+
+const scrollToTopBtn = document.getElementById('scroll-to-top');
+
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 100) {
+        scrollToTopBtn.style.display = 'block';
+    } else {
+        scrollToTopBtn.style.display = 'none';
+    }
+});
+
+scrollToTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+    </script>
+</body>
+
+</html>

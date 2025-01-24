@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R Script Display</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css">
+</head>
+<body>
+    <h2>multilevel analysis</h2>
+    <pre><code class="language-r">
+# Sample R code: two-level SEM with a random effect structure
+# Load necessary libraries
+library(lavaan)
+library(lme4)
+library(dplyr)
+
+# Load data
+data <- read.table("CHI1.dat", header = TRUE, na.strings = ".")
+
+# Center the variables based on grand mean for BETWEEN level
+center_vars <- c("PERCOMP_mean", "PERCOOP_mean", "TEACHSUP_mean")
+data <- data %>%
+  mutate(across(all_of(center_vars), ~ . - mean(., na.rm = TRUE), .names = "{.col}_centered"))
+
+# Specify within and between variables
+within_vars <- c("ST004D01T", "ESCS", "PROGN1", "PROGN2", "COMPETE_c", "WORKMAST_c", "GFOFAIL_c")
+between_vars <- c("PERCOOP_mean_centered", "PERCOMP_mean_centered", "TEACHSUP_mean_centered")
+
+# Two-level model specification
+model <- '
+# Within level
+  EUDMO ~ ST004D01T + ESCS + PROGN1 + PROGN2 + COMPETE_c + WORKMAST_c + GFOFAIL_c
+  EUDMO ~ c*COMPETE_c
+  EUDMO ~ d*WORKMAST_c
+  EUDMO ~ e*GFOFAIL_c
+  
+# Between level
+  EUDMO ~ a*PERCOOP_mean_centered + b*PERCOMP_mean_centered + f*TEACHSUP_mean_centered
+  COMPETE_c ~~ WORKMAST_c + GFOFAIL_c
+  COMPETE_c ~~ EUDMO
+  WORKMAST_c ~~ EUDMO
+  GFOFAIL_c ~~ EUDMO
+'
+
+# Fit the model with lavaan
+fit <- sem(model, data = data, cluster = "CNTSCHID", estimator = "MLR", 
+           missing = "ml", level = 2, 
+           fixed.x = FALSE, group = NULL)
+
+# Summarize the fit
+summary(fit, fit.measures = TRUE, standardized = TRUE)
+
+# Output options similar to Mplus
+inspect(fit, "samplestat")
+inspect(fit, "standardized")
+
+    </code></pre>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+</body>
+</html>

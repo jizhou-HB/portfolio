@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R Script Display</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css">
+</head>
+<body>
+    <h2>R code for Latent profile analysis and validation</h2>
+    <pre><code class="language-r">
+## first step: latent profile analysis
+# Load necessary libraries
+library(mclust)
+library(dplyr)
+
+# Load data
+data <- read.table("gym_w4.dat", header = TRUE, na.strings = ".")
+
+# Specify the variables for LPA
+lpa_vars <- data %>% select(PG, auto, coop, goal, cm)
+
+# Perform LPA using mclust, with a 4-class solution
+lpa_model <- Mclust(lpa_vars, G = 4)
+
+# Summary of the model
+summary(lpa_model)
+
+# Extract class probabilities for each individual (similar to BCH weights)
+bch_weights <- lpa_model$z
+colnames(bch_weights) <- paste0("BCHW", 1:4)
+
+# Add BCH weights and class assignments to the data
+data_bch <- cbind(data, bch_weights, Class = lpa_model$classification)
+
+# Save BCH weights data for Step 2
+write.table(data_bch, "step2_data.dat", row.names = FALSE, na = ".", quote = FALSE)
+
+
+## step 2: conditional regression with auxiliary variables
+# Load necessary libraries
+library(poLCA)
+
+# Load the Step 2 data
+data_step2 <- read.table("step2_data.dat", header = TRUE, na.strings = ".")
+
+# Convert auxiliary and BCH weights to factors where needed
+data_step2 <- data_step2 %>%
+  mutate(
+    g1 = factor(g1),
+    Note1 = as.numeric(Note1)
+  )
+
+# Define the formula for poLCA model
+# We are using the BCH weights to fix class membership probabilities
+f <- cbind(BCHW1, BCHW2, BCHW3, BCHW4) ~ 1
+
+# Fit the poLCA model for 4 classes, using BCH weights for regression
+lca_model <- poLCA(f, data = data_step2, nclass = 4, na.rm = FALSE, maxiter = 3000)
+
+# View model results
+summary(lca_model)
+
+# Regression analysis on Note1 with g1 as predictor within each latent class
+# Using the fitted latent class model, we perform regression separately for each class
+for (class in 1:4) {
+  class_data <- subset(data_step2, Class == class)
+  model <- lm(Note1 ~ g1, data = class_data)
+  cat("\nClass", class, "regression:\n")
+  print(summary(model))
+}
+
+
+    </code></pre>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+</body>
+</html>

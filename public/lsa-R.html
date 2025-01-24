@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PISA 2018 project</title>
+    <link rel="stylesheet" href="../stylenew.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <a href="../index.html" class="home-link"><h1>Ji Zhou</h1></a>
+            <span class="icon" onclick="toggleNav()">☰</span> <!-- Menu icon for mobile -->
+            <nav class="navbar-links">
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="#overview">Overview</a></li>
+                    <li><a href="#detail1">Skill 1</a></li>
+                    <li><a href="#detail2">Skill 2</a></li>
+                    <li><a href="#detail3">Skill 3</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <section id="overview">
+            <div class="ufo-sec--bg">
+                <h2>Project Overview</h2>
+                <p>The OECD's PISA project assesses 15-year-olds' reading, math, and science skills in real-life contexts, along with contextual factors explaining performance differences. While ETS develops achievement assessments, our DIPF research team focuses on the contextual questionnaires.<br></p>
+                    <p>What is PISA: 
+                        <a href="https://www.oecd.org/en/about/programmes/pisa.html" target="_blank">
+                          <img src="../assets/images/pisa.png" alt="OECD PISA project" style="width: 30px; height: 30px;"></a>
+                    &nbsp;&nbsp;Who is ETS: <a href="https://www.ets.org/products.html" target="_blank">
+                        <img src="../assets/images/ets.png" alt="OECD PISA project" style="width: 30px; height: 30px;"></a> 
+                    &nbsp;&nbsp;Who is DIPF: <a href="https://www.dipf.de/de" target="_blank"><img src="../assets/images/dipf.png" alt="OECD PISA project" style="width: 30px; height: 30px;"></a></p>
+                <div class="overview-grid">
+                    <div class="overview-tile">
+                        <h3>Questionnaire Development</h3>
+                        <p>As a postdoc research associate on the PISA 2018 project, I optimized various questionnaires (e.g., teacher and student motivation scales) and evaluated scale quality using Classical Test Theory and Item Response Theory. My data analysis and presentation at the QEG meeting at ETS enabled questionnaire experts to finalize item decisions for all PISA contextual scales within two days. </p>
+                    </div>
+                    <div class="overview-tile">
+                        <h3>Data analysis</h3>
+                        <p>The PISA field test data included multi-level datasets from over 70 countries, with weighting and proxy variables. Using R, Excel, and SPSS, I handled data cleaning, transformation, visualization, and analysis. Key R packages included dplyr for data cleaning and ggplot2 for visualization. Applied methods ranged from reliability and factor analysis to IRT-based DIF analysis and Hierarchical Linear Modeling.</p>
+                    </div>
+                    <div class="overview-tile">
+                        <h3>Adaptation and harmonization</h3>
+                        <p>I coordinated the adaptation and harmonization process for the PISA 2018 project, ensuring high comparability across over 70 national questionnaires. This involved close collaboration with national PM teams and ETS, requiring deep knowledge of each country’s educational system and stakeholder needs. I also identified deviations by thoroughly reviewing documentation and comparing analysis results.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="detail1" class="project-details">
+            <h2 class="section-title">Questionnaire Development</h2>
+            <div class="detail-grid">
+                <div class="detail-tile">
+                    <h3>Objectives</h3>
+                    <p> Working for DIPF as contractor of ETS, we analyzed field test data and provided data-driven recommendations to refine items and scales for the main study.</p>
+                </div>
+                <div class="detail-tile">
+                    <h3>Approaches</h3>
+                    <p>I developed scales for motivation, the teacher questionnaire, and learning environment, using test theory to set evaluation criteria for item selection. My presentations enabled timely decisions by Questionnaire Experts.</p>
+                    <br><p> I also proposed improvements to the scoring method, conducted comparative analyses, and published the findings in a Q1 journal.</p>
+                    <br><p>Here is a similar R script to what I used: <a href="./scriptR3.html" target="_blank">Go to scripts</a></p>
+                    <br><p>The same codes or methods can also be used for developing/validating any kinds of questionnaires suitable for different segmentation groups.</p>
+                </div>
+                <div class="detail-tile">
+                    <h3>Deliverables/Publications</h3>
+                    <p>Here is the publication link, which was based on the validity analysis of PISA data: <a href="https://www.tandfonline.com/doi/abs/10.1080/0969594X.2020.1828820" target="_blank">How I evaluated the quality of scoring or coding methods</a></p>
+                    
+                </div>
+            </div>
+        </section>        
+        <section id="gallery">
+            <h2>QEG meeting presentation</h2>
+            <div class="gallery-grid">
+                <img src="../assets/images/ppt1.png" alt="Research Image 1">
+            </div>
+        </section>
+        <section id="detail2" class="project-details">
+            <h2 class="section-title">Data analysis</h2>
+            <div class="detail-grid">
+                <div class="detail-tile">
+                    <h3>Objectives</h3>
+                    <p> Field test data from different countries should be cleaned and merged, data quality should be checked and analysis should be conducted. Since we were also researchers, one of the aim was also to identify possible interesting research topics.</p>
+                </div>
+                <div class="detail-tile">
+                    <h3>Tools and scripts</h3>
+                    <p>I focused on familiar scale topics, uncovering relationships between perceived learning environment, internal motivation, and learning outcomes.</p>
+                    <br><p>R script for this topic can be seen here: <a href="./scriptR2.html" target="_blank">Go to scripts</a></p>
+                    <p>The same codes or methods (PCA, Structural equation modeling, factor analysis, multi-level regression, predictive modeling, mixed effect modeling, etc.) can be used for topics such as: Product Demand Forecasting, Brand Perception and Positioning
+                        Customer or User Satisfaction and Loyalty Analysis,Market Potential and Opportunity Analysis,Attitudinal and Behavioral Analysis,etc. </p>
+                </div>
+                <div class="detail-tile">
+                    <h3>Deliverables/Publications</h3>
+                    <p>I have published the final result based on the multi-level large-scale data analysis:
+                        <a href="https://largescaleassessmentsineducation.springeropen.com/articles/10.1186/s40536-023-00167-7" target="_blank"> how motivation of individuals and their perception of environment influenced their achievement </a> </p>
+                </div>
+            </div>
+        </section>        
+
+        <section id="detail3" class="project-details">
+            <h2 class="section-title">Adaptation and harmonization</h2>
+            <div class="detail-grid">
+                <div class="detail-tile">
+                    <h3>Background/Objective</h3>
+                    <p>With questionnaires from over 70 countries, ensuring comparability was challenging due to differing concepts. Adaptation and harmonization were essential to reduce cross-country variance, making concepts more comparable. 
+                    </p>
+                </div>
+                <div class="detail-tile">
+                    <h3>Tools and scripts</h3>
+                    <p>Achieving comparability required knowledge of global educational systems and skill in detecting differences through documentation analysis. This included comparing scaling documents across cycles, noting historical shifts, and assessing levels across countries. To evaluate concepts, we also gathered scale evaluations from national project managers' (NPM) perspectives. </p>
+                    <p>R scripts visualizing the evaluation of NPMs to a scale: <a href="./scriptR.html" target="_blank">Go to scripts</a></p>
+                </div>
+                <div class="detail-tile">
+                    <h3>Deliverables</h3>
+                    <p>We typically addressed NPMs' questions through thorough documentation review. Based on data-driven reports, PISA questionnaires across countries were deemed comparable. </p>
+                </div>
+            </div>
+        </section>        
+        <section id="gallery">
+            <h2>Evaluation from NPMs</h2>
+            <div class="gallery-grid">
+                <img src="../assets/images/ppt2.png" alt="Research Image 1">
+            </div>
+        </section>
+        <section id="gallery">
+            <h2>Skill cloud</h2>
+            <div class="gallery-grid">
+                <img src="../assets/images/skillcloud1.png" alt="Research Image 1">
+            </div>
+        </section>
+    </div>
+    <button id="scroll-to-top" title="Back to top">↑</button>
+    <footer>
+        <p>&copy; 2024 Ji Zhou. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Smooth scrolling for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetElement = document.querySelector(this.getAttribute('href'));
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - document.querySelector('header').offsetHeight,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        function toggleNav() {
+            const navbarLinks = document.querySelector('.navbar-links');
+            navbarLinks.classList.toggle('responsive');
+        }
+
+        // for scroll to top
+
+const scrollToTopBtn = document.getElementById('scroll-to-top');
+
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 100) {
+        scrollToTopBtn.style.display = 'block';
+    } else {
+        scrollToTopBtn.style.display = 'none';
+    }
+});
+
+scrollToTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+    </script>
+</body>
+
+</html>

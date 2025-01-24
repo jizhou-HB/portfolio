@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R Script Display</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css">
+</head>
+<body>
+    <h2>R codes for cleaning data and calculating DVs va</h2>
+    <pre><code class="language-r">
+## Sample R code: get longitudinal data set ready for analysis
+#cleaning data, recoding, calculate the variables I want
+# Load required libraries
+library(haven)
+library(psych)
+library(lavaan)
+library(dplyr)
+library(tidyverse)
+library(fastDummies)
+
+# Set working directory
+setwd("Y:/nepslongi")
+
+# Read in main dataset
+datanc <- read.csv("nochangesch.csv")
+
+# Conduct an ANOVA-like test on the goal variable based on sex
+oneway.test(w5goal ~ w1sex, data = datanc, var.equal = TRUE)
+
+# Compute means for specific groups
+data_sex1 <- filter(datanc, w1sex == 1)
+data_sex0 <- filter(datanc, w1sex == 0)
+
+# Print means for goal and intrinsic variables by sex
+mean(data_sex1$w5goal, na.rm = TRUE)
+mean(data_sex0$w5goal, na.rm = TRUE)
+mean(data_sex1$w5intr, na.rm = TRUE)
+mean(data_sex0$w5intr, na.rm = TRUE)
+
+# Drop redundant columns
+datanc <- datanc %>% select(-c(X, X.1))
+
+# Convert necessary columns to factor
+datanc <- datanc %>%
+  mutate(across(c(ID_t), as.factor)) %>%
+  mutate(ID_t = as.numeric(as.character(ID_t)))
+
+# Recode variables to numeric and create aggregated scales
+dat1 <- datanc %>%
+  mutate(
+    PG1 = case_when(td0033a %in% 1:5 ~ as.numeric(td0033a), TRUE ~ NA_real_),
+    PG4 = case_when(td0033d %in% 1:5 ~ as.numeric(td0033d), TRUE ~ NA_real_),
+    PG5 = case_when(td0033e %in% 1:5 ~ as.numeric(td0033e), TRUE ~ NA_real_),
+    PG = rowMeans(select(., PG1, PG4, PG5), na.rm = TRUE),
+    
+    auto1 = case_when(td0034a %in% 1:5 ~ as.numeric(td0034a), TRUE ~ NA_real_),
+    auto2 = case_when(td0034b %in% 1:5 ~ as.numeric(td0034b), TRUE ~ NA_real_),
+    auto3 = case_when(td0034c %in% 1:5 ~ as.numeric(td0034c), TRUE ~ NA_real_),
+    auto = rowMeans(select(., auto1, auto2, auto3), na.rm = TRUE),
+    
+    coop1 = case_when(td0035a %in% 1:5 ~ as.numeric(td0035a), TRUE ~ NA_real_),
+    coop2 = case_when(td0035b %in% 1:5 ~ as.numeric(td0035b), TRUE ~ NA_real_),
+    coop3 = case_when(td0035c %in% 1:5 ~ as.numeric(td0035c), TRUE ~ NA_real_),
+    coop = rowMeans(select(., coop1, coop2, coop3), na.rm = TRUE),
+    
+    goal1 = case_when(td0036a %in% 1:5 ~ as.numeric(td0036a), TRUE ~ NA_real_),
+    goal2 = case_when(td0036b %in% 1:5 ~ as.numeric(td0036b), TRUE ~ NA_real_),
+    goal3 = case_when(td0036c %in% 1:5 ~ as.numeric(td0036c), TRUE ~ NA_real_),
+    goal = rowMeans(select(., goal1, goal2, goal3), na.rm = TRUE),
+    
+    cm1 = case_when(td0032a %in% 1:5 ~ as.numeric(td0032a), TRUE ~ NA_real_),
+    cm2 = case_when(td0032b %in% 1:5 ~ as.numeric(td0032b), TRUE ~ NA_real_),
+    cm3 = case_when(td0032c %in% 1:5 ~ as.numeric(td0032c), TRUE ~ NA_real_),
+    cm4 = case_when(td0032d %in% 1:5 ~ as.numeric(td0032d), TRUE ~ NA_real_),
+    cm = rowMeans(select(., cm1, cm2, cm3, cm4), na.rm = TRUE),
+    
+    Note1 = case_when(t724101 %in% 1:6 ~ 7 - as.numeric(t724101), TRUE ~ NA_real_),
+    ls = case_when(t514006 %in% 0:10 ~ as.numeric(t514006), TRUE ~ NA_real_),
+    
+    age = 2009 + wave - t70004y,
+    sex = case_when(t700031 == 1 ~ 0, t700031 == 2 ~ 1, TRUE ~ NA_real_),
+    
+    intr1 = case_when(td0042a %in% 1:4 ~ as.numeric(td0042a), TRUE ~ NA_real_),
+    intr2 = case_when(td0042b %in% 1:4 ~ as.numeric(td0042b), TRUE ~ NA_real_),
+    intr3 = case_when(td0042c %in% 1:4 ~ as.numeric(td0042c), TRUE ~ NA_real_),
+    intr4 = case_when(td0042d %in% 1:4 ~ as.numeric(td0042d), TRUE ~ NA_real_),
+    intr = rowMeans(select(., intr1, intr2, intr3, intr4), na.rm = TRUE)
+  )
+
+# Select and clean relevant columns
+dat2 <- dat1 %>%
+  select(ID_t, wave, sex, age, PG, auto, coop, goal, cm, ls, Note1, intr)
+
+# Import additional data files for weight, sample, and school ID
+dat4 <- read_spss("SC3_Weights_D_11-0-1.sav") %>%
+  select(ID_t, sample, w_t1to5)
+
+dat3 <- read_spss("SC3_CohortProfile_D_11-0-1.sav") %>%
+  mutate(
+    track = case_when(
+      t723080_g1 %in% c(1, 2, 6, 12) ~ 0, # vocational
+      t723080_g1 == 3 ~ 1,               # gym
+      TRUE ~ 2                           # other
+    )
+  ) %>%
+  filter(wave == 1) %>%
+  select(ID_t, ID_i, track)
+
+# Join data for each wave
+wave_data <- list()
+for (w in 1:5) {
+  dat_wave <- filter(dat2, wave == w)
+  dat_track <- filter(dat3, wave == w)
+  wave_data[[w]] <- left_join(dat_wave, dat_track, by = "ID_t") %>%
+    rename_with(~ paste0("w", w, .), .cols = -ID_t)
+}
+
+# Merge all waves into a single dataset
+w12345 <- reduce(wave_data, full_join, by = "ID_t")
+
+# Save the cleaned data
+write.csv(w12345, "fivefull_cleaned.csv")
+
+
+
+    </code></pre>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+</body>
+</html>
